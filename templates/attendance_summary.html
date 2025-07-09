@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Summary</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: "CSE DEPT";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-20deg);
+            font-size: 100px;
+            color: rgba(255, 255, 255, 0.08);
+            font-weight: bold;
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        h2, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 1;
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .low-attendance {
+            background-color: rgba(143, 47, 47, 0.600);
+        }
+
+        button {
+            margin: 0 auto;
+            display: block;
+            padding: 12px 25px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            z-index: 1;
+            position: relative;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .back-btn {
+            display: block;
+            width: fit-content;
+            margin: 30px auto 0;
+            padding: 12px 25px;
+            background: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: background 0.3s;
+            z-index: 1;
+            position: relative;
+        }
+
+        .back-btn:hover {
+            background: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+    <h2>Overall Attendance Summary</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Total Sessions</th>
+            <th>Present Sessions</th>
+            <th>Absent Sessions</th>
+            <th>Attendance %</th>
+        </tr>
+        {% for student in summary %}
+        <tr {% if student.percentage < 75 %} class="low-attendance" {% endif %}>
+            <td>{{ student.id }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.total_sessions }}</td>
+            <td>{{ student.present_sessions }}</td>
+            <td>{{ student.absent_sessions }}</td>
+            <td>{{ student.percentage }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Students with Less Than 75% Attendance</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Attendance %</th>
+        </tr>
+        {% for student in low_attendance %}
+        <tr class="low-attendance">
+            <td>{{ student.id }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.percentage }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <button id="sendAlertBtn" onclick="sendAlerts()">Send Alert to Students</button>
+
+    <a href="/attendance_history" class="back-btn">⬅ Back to Attendance Board</a>
+
+    <script>
+        function sendAlerts() {
+            if (confirm("Are you sure you want to send alert emails to students with less than 75% attendance?")) {
+                fetch('/send_alerts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to send alerts.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Summary</title>
+    
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #003366;
+            color: white;
+        }
+        .low-attendance {
+            background-color: #ffcccc;
+        }
+    </style>
+</head>
+<body>
+    <h2>Overall Attendance Summary</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Total Sessions</th>
+            <th>Present Sessions</th>
+            <th>Absent Sessions</th>
+            <th>Attendance %</th>
+        </tr>
+        {% for student in summary %}
+        <tr {% if student.percentage < 75 %} class="low-attendance" {% endif %}>
+            <td>{{ student.id }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.total_sessions }}</td>
+            <td>{{ student.present_sessions }}</td>
+            <td>{{ student.absent_sessions }}</td>
+            <td>{{ student.percentage }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Students with Less Than 75% Attendance</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Attendance %</th>
+        </tr>
+        {% for student in low_attendance %}
+        <tr class="low-attendance">
+            <td>{{ student.id }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.percentage }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <button id="sendAlertBtn" onclick="sendAlerts()" style="margin-top: 20px; padding: 10px 20px; background-color: #004080; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Send Alert to Students
+    </button>
+    <script>
+        function sendAlerts() {
+            if (confirm("Are you sure you want to send alert emails to students with less than 75% attendance?")) {
+                fetch('/send_alerts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to send alerts.');
+                });
+            }
+        }
+    </script>
+    
+    
+</body>
+</html> -->

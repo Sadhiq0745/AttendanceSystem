@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Student Attendance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: "CSE DEPT";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-20deg);
+            font-size: 100px;
+            color: rgba(255, 255, 255, 0.08);
+            font-weight: bold;
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        h2, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .top-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 250px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a button {
+            background-color: #28a745;
+        }
+
+        a button:hover {
+            background-color: #1e7e34;
+        }
+
+        .download-link {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        .download-link:hover {
+            background: #1e7e34;
+        }
+
+        table {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: white;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #444;
+            text-align: center;
+        }
+
+        th {
+            background: #007BFF;
+        }
+
+        td a {
+            color: #00d9ff;
+            text-decoration: underline;
+        }
+
+        .back-btn {
+            display: block;
+            width: fit-content;
+            margin: 30px auto 0;
+            padding: 12px 25px;
+            background: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: background 0.3s;
+            z-index: 1;
+            position: relative;
+        }
+
+        .back-btn:hover {
+            background: #0056b3;
+        }
+
+        p {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <h2>Search Student by ID</h2>
+
+    <div class="top-buttons">
+        <form method="POST" action="/attendance_history" style="display: inline-flex;">
+            <input type="text" name="search_id" placeholder="Search by ID" value="{{ search_query }}">
+            <button type="submit">🔍 Search</button>
+        </form>
+
+        <a href="/attendance_summary">
+            <button>📊 View Attendance Summary</button>
+        </a>
+
+        <a href="/generate_attendance_report" class="download-link">📥 Download Attendance Report</a>
+    </div>
+
+    <h3>Students List</h3>
+
+    {% if students %}
+    <table>
+        <tr><th>Student ID</th><th>Name</th></tr>
+        {% for student_id, student in students.items() %}
+        <tr>
+            <td><a href="/student_attendance/{{ student_id }}">{{ student_id }}</a></td>
+            <td>{{ student.name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No students found.</p>
+    {% endif %}
+
+    <a href="/" class="back-btn">⬅ Back to Dashboard</a>
+</body>
+</html>
+
+
+
+<!--
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Student Attendance</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f1f1f1; }
+        input { width: 300px; padding: 10px; }
+        button { padding: 10px; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; background: white; }
+        th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
+        th { background: #007BFF; color: white; }
+        a { text-decoration: none; color: #007BFF; }
+        .top-buttons { margin-bottom: 20px; }
+        .top-buttons a, .top-buttons button { margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Search Student by ID</h2>
+
+    <div class="top-buttons">
+         Search Form
+        <form method="POST" action="/attendance_history" style="display: inline-flex;">
+            <input type="text" name="search_id" placeholder="Search by ID" value="{{ search_query }}" class="form-control" style="margin-right: 5px;">
+            <button type="submit" class="btn btn-primary">🔍 Search</button>
+        </form>
+         
+         <a href="/attendance_summary"><button>📊 View Attendance Summary</button></a>
+
+        
+        <a href="/generate_attendance_report" class="btn btn-success">📥 Download Attendance Report</a>
+
+       
+    </div>
+
+    <h3>Students List</h3>
+    
+    {% if students %}
+    <table>
+        <tr><th>Student ID</th><th>Name</th></tr>
+        {% for student_id, student in students.items() %}
+        <tr>
+            <td><a href="/student_attendance/{{ student_id }}">{{ student_id }}</a></td>
+            <td>{{ student.name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No students found.</p>
+    {% endif %}
+</body>
+</html>
+-->

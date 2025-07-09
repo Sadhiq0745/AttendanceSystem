@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+            background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
+        }
+
+        .background-text {
+            position: absolute;
+            font-size: 100px;
+            color: rgba(255, 255, 255, 0.25);
+            font-weight: bold;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            user-select: none;
+            z-index: 0;
+        }
+
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, #1d2b64, #f8cdda, #1d2b64);
+            background-size: 400% 400%;
+            animation: backgroundMove 15s ease infinite;
+            z-index: -1;
+            opacity: 0.25;
+        }
+
+        @keyframes backgroundMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+            width: 90%;
+            max-width: 500px;
+            margin: auto;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #fff;
+        }
+
+        a, .start-btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 25px;
+            background: #00c6ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        a:hover, .start-btn:hover {
+            background: #0072ff;
+        }
+
+        a[href="/logout"] {
+            background: #ff4d4d;
+        }
+
+        a[href="/logout"]:hover {
+            background: #cc0000;
+        }
+
+        .alert {
+            margin: 15px auto 0;
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div class="background-text">CSE DEPT</div>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert">
+          {{ messages[0] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="login-container">
+        <h2>Welcome, {{ admin }}!</h2>
+        <h2>Admin Dashboard</h2>
+
+        <a href="/register_student">Register Student</a>
+        <a href="/students">View Students</a>
+        <a href="/attendance_history">Attendance History</a><br>
+
+        <!-- Place inside <body> -->
+        <form id="startForm" action="/start_attendance" method="POST" style="margin-top: 15px;">
+            <button id="startBtn" type="submit" class="start-btn">Start Attendance Camera</button>
+            <div id="spinner" style="display:none; margin-top: 10px; color: #fff;">Starting camera...</div>
+        </form>
+
+        <!-- <form action="/stop_attendance" method="POST" style="margin-top: 10px;">
+            <button type="submit" class="start-btn" style="background-color: #ff9800;">Stop Attendance Camera</button>
+        </form> -->
+        <form action="/stop_attendance" method="POST" style="margin-top: 10px;">
+            <button type="submit" class="start-btn" style="background-color: #ff9800;">Stop Attendance Camera</button>
+        </form>
+        
+
+        <script>
+            const startForm = document.getElementById('startForm');
+            const startBtn = document.getElementById('startBtn');
+            const spinner = document.getElementById('spinner');
+
+            startForm.addEventListener('submit', function () {
+                startBtn.disabled = true;
+                spinner.style.display = 'block';
+            });
+        </script>
+
+
+        <a href="/logout">Logout</a>
+    </div>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+            background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
+        }
+
+        .background-text {
+            position: absolute;
+            font-size: 100px;
+            color: rgba(255, 255, 255, 0.25); /* Increased opacity further */
+            font-weight: bold;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            user-select: none;
+            z-index: 0;
+        }
+
+
+
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, #1d2b64, #f8cdda, #1d2b64);
+            background-size: 400% 400%;
+            animation: backgroundMove 15s ease infinite;
+            z-index: -1;
+            opacity: 0.25;
+        }
+
+        @keyframes backgroundMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+            width: 90%;
+            max-width: 500px;
+            margin: auto;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #fff;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 25px;
+            background: #00c6ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        a:hover {
+            background: #0072ff;
+        }
+
+        a[href="/logout"] {
+            background: #ff4d4d;
+        }
+
+        a[href="/logout"]:hover {
+            background: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div class="background-text">CSE DEPT</div>
+
+    <div class="login-container">
+        <h2>Welcome, {{ admin }}!</h2>
+        <h2>Admin Dashboard</h2>
+
+        <a href="/register_student">Register Student</a>
+        <a href="/students">View Students</a>
+        <a href="/attendance_history">Attendance History</a><br>
+        <a href="/logout">Logout</a>
+    </div>
+</body>
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .login-container {
+            text-align: center;
+            padding: 50px;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 25px;
+            background: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        a:hover {
+            background: #0056b3;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Welcome, {{ admin }}!</h2>
+        <h2>Admin Dashboard</h2>
+
+        <a href="/register_student">Register Student</a>
+        <a href="/students">View Students</a>
+        <a href="/attendance_history">Attendance History</a><br> -->
+        <!-- <a href="/logout" style="background: red;">Logout</a>
+    </div>
+</body>
+</html> --> 

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Attendance History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f8fb;
+            padding: 20px;
+        }
+        h2, h4 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+        th, td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #004080;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #eef5ff;
+        }
+        .absent {
+            color: red;
+            font-weight: bold;
+        }
+        .present {
+            color: green;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 20px auto;
+            display: block;
+            background-color: #004080;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #003366;
+        }
+        p {
+            text-align: center;
+            font-size: 18px;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Attendance History for {{ student.name if student else 'Unknown Student' }}</h2>
+<h4>Student ID: {{ student_id }}</h4>
+
+{% if message %}
+    <p>{{ message }}</p>
+{% endif %}
+
+{% if history %}
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Morning</th>
+            <th>Afternoon</th>
+            <th>Not Present Whole Day</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in history %}
+        <tr>
+            <td>{{ record.date }}</td>
+            <td class="{{ 'present' if record.morning == 'Present' else 'absent' }}">{{ record.morning }}</td>
+            <td class="{{ 'present' if record.afternoon == 'Present' else 'absent' }}">{{ record.afternoon }}</td>
+            <td>{{ record.not_present_whole_day }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>No attendance records found for this student.</p>
+{% endif %}
+
+<a href="/attendance_history"><button>Back to Students List</button></a>
+
+</body>
+</html>

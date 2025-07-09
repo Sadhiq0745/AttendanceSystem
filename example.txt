@@ -1,0 +1,18 @@
+attendance-system
+    app.py
+    firebase_config.py
+    regiseter_student.py
+    servicAccountKey.json
+    attendance_marking.py
+    auto_absent_marker.py
+    templates
+        dashboard.html
+        login.html
+        register_student.html
+        view_students.html
+        attendance_search.html
+        attendance_summary.html
+        student_attendance_history.html
+        
+
+    
